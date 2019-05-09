@@ -4,6 +4,7 @@ namespace NAWebCo\BoxPacker;
 class Solid
 {
     use ExtensionTrait;
+    use DescribableTrait;
 
     /**
      * A name or id for this item.

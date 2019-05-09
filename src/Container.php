@@ -3,6 +3,7 @@ namespace NAWebCo\BoxPacker;
 
 class Container extends AbstractContainer
 {
+    use DescribableTrait;
 
     /**
      * @var ContainerLevel[]

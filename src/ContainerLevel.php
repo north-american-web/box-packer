@@ -20,7 +20,7 @@ class ContainerLevel
     /**
      * @var Solid[]
      */
-    protected $placedSolids = [];
+    protected $packedSolids = [];
 
     /**
      * @var Solid[]
@@ -62,7 +62,7 @@ class ContainerLevel
      */
     public function getContentsCount()
     {
-        $count = count($this->placedSolids);
+        $count = count($this->packedSolids);
         if( $this->containers ){
             foreach( $this->containers as $container ){
                 /** @var Container $container */
@@ -82,6 +82,24 @@ class ContainerLevel
     }
 
     /**
+     * Get all the solids packed in this layer (including in containers)
+     *
+     * @return Solid[]
+     */
+    public function getPackedSolids()
+    {
+        $packed = $this->packedSolids;
+        if( $this->containers ){
+            foreach( $this->containers as $container ){
+                /** @var Container $container */
+                $packed = array_merge( $packed, $container->getPackedSolids());
+            }
+        }
+
+        return $packed;
+    }
+
+    /**
      * Given a two-dimensional open area and a solid, return the area(s) that would remain if the solid were placed in
      * the area. The solid will rest along (at least) two edges of the area and will be oriented to yield the largest
      * possible remaining space.
@@ -89,12 +107,12 @@ class ContainerLevel
      * @param Solid $item
      * @param Solid $area
      * @return array
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function calculateNewSpaces(Solid $item, Solid $area)
     {
         if( !$area->canContainBaseWithoutXOrYAxisRotation($item) ){
-            throw new \InvalidArgumentException('Item cannot fit in the container.');
+            throw new InvalidArgumentException('Item cannot fit in the container.');
         }
 
         // If the solid's width (its longest edge) can fit against the area's length (its shortest edge),
@@ -149,20 +167,21 @@ class ContainerLevel
      */
     protected function attemptToAddToSpaces(Solid $solid)
     {
-        if( !$this->spaces ){
-            return false;
-        }
-
         $viableSpaceKey = $this->getKeyOfSmallestViableSpace($solid);
 
         if( $viableSpaceKey === null ){
-            if( $this->getContentsCount() === 0 ){
+            if( count($this->packedSolids) === 0 ){
                 return false;
             }
 
             // Create containers and try again
             if( !$this->containers ){
                 $this->initContainers();
+
+                if( !$this->containers ){
+                    // There were no spaces (including above packed items) to make into containers.
+                    return false;
+                }
                 return $this->addSolid($solid);
             }
 
@@ -199,6 +218,10 @@ class ContainerLevel
      */
     protected function getKeyOfSmallestViableSpace(Solid $solid)
     {
+        if( !$this->spaces ){
+            return null;
+        }
+
         foreach ($this->spaces as $key => $space) {
             /**
              * @var Solid $space
@@ -213,12 +236,12 @@ class ContainerLevel
     /**
      * @param Solid $solid
      * @param int $spaceKey
-     * @throws Exception
+     * @throws InvalidArgumentException
      */
     protected function placeSolidInSpace(Solid $solid, $spaceKey)
     {
         if (!array_key_exists($spaceKey, $this->spaces)) {
-            throw new Exception('Invalid open area key.');
+            throw new InvalidArgumentException('Invalid open area key.');
         }
 
         // Rework open areas
@@ -227,21 +250,18 @@ class ContainerLevel
         $this->spaces = array_merge($this->spaces, $this->calculateNewSpaces($solid, $space));
         $this->sortSolids($this->spaces);
 
-        $this->placedSolids[] = $solid;
-
-        $solid->applyStandardOrientation();
+        $this->packedSolids[] = $solid;
     }
 
     /**
      * Get the areas above each placed solid on this level as SolidContainers.
      *
      * @return ContainerLevel[]
-     * @throws Exception
      */
     protected function getSpacesAbovePlacedSolidsAsContainers()
     {
         $spaces = [];
-        foreach( $this->placedSolids as $solid ){
+        foreach($this->packedSolids as $solid ){
             $openHeight = $this->getContentsMaxHeight() - $solid->getHeight();
             if( $openHeight > 0 ){
                 $spaces[] = new Container(

@@ -69,7 +69,7 @@ class Container
 
                 // Add another level and try again.
                 $this->addNewLevel();
-                if( !$this->topLevel->addSolid($solid)){
+                if (!$this->topLevel->addSolid($solid)) {
                     return false;
                 }
             }
@@ -78,12 +78,32 @@ class Container
         return $this->getContentsTotalHeight() <= $this->getHeight();
     }
 
-    public function reset()
+    /**
+     * Get all the solids packed in this container.
+     *
+     * @return Solid[]
+     */
+    public function getPackedSolids()
+    {
+        $solids = [];
+        foreach ($this->getLevels() as $level) {
+            /** @var ContainerLevel $level */
+            $solids = array_merge($solids, $level->getPackedSolids());
+        }
+        return $solids;
+    }
+
+    /**
+     * Empty the container. The description is left unchanged.
+     * @return $this
+     */
+    public function emptyContents()
     {
         $this->lowerLevels = [];
         $this->completeLevelsTotalHeight = 0.0;
         $this->topLevel = null;
         $this->initNewTopLevel();
+        return $this;
     }
 
     /**
@@ -143,7 +163,7 @@ class Container
      */
     public function getLevels()
     {
-        return array_merge( $this->getLowerLevels(), [$this->topLevel]);
+        return array_merge($this->getLowerLevels(), [$this->topLevel]);
     }
 
     /**

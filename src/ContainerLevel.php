@@ -1,9 +1,15 @@
 <?php
 namespace NAWebCo\BoxPacker;
 
-class ContainerLevel extends AbstractContainer
-{
+use \InvalidArgumentException;
 
+class ContainerLevel
+{
+    use ExtensionTrait;
+
+    /**
+     * @var Container[]
+     */
     protected $containers = [];
 
     /**
@@ -23,12 +29,19 @@ class ContainerLevel extends AbstractContainer
 
     /**
      * ContainerLevel constructor.
-     * @param Solid $solid
+     * @param float $width
+     * @param float $length
      */
-    public function __construct(Solid $solid)
+    public function __construct($width, $length)
     {
-        parent::__construct($solid);
-        $this->spaces = [$solid];
+        $this->width = (float)$width;
+        $this->length = (float)$length;
+
+        if( ($width * $length) <= 0 ){
+            throw new \InvalidArgumentException( sprintf('Dimensions must both be greater than 0. %f, %f provided.', $width, $length ));
+        }
+
+        $this->spaces = [new Solid($width, $length)];
     }
 
     /**

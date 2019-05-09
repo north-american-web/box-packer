@@ -1,8 +1,10 @@
 <?php
+
 namespace NAWebCo\BoxPacker;
 
-class Container extends AbstractContainer
+class Container
 {
+    use ExtensionTrait;
     use DescribableTrait;
 
     /**
@@ -27,17 +29,21 @@ class Container extends AbstractContainer
 
     /**
      * SolidContainer constructor.
-     * @param $width
-     * @param $length
-     * @param int $height
+     * @param float $width
+     * @param float $length
+     * @param float $height
      * @param string $description
      */
-    public function __construct($width, $length, $height = 0, $description = '')
+    public function __construct($width, $length, $height = 0.0, $description = '')
     {
-        $solid = new Solid($width, $length, $height);
-        parent::__construct($solid);
+        $this->setDimensions($width, $length, $height);
+        $this->applyStandardOrientation();
+
+        if( $this->getHeight() <= 0 ){
+            throw new \InvalidArgumentException('Invalid dimensions provided. All dimensions must be greater than zero.');
+        }
+
         $this->setDescription($description);
-        $this->levelPrototype = new ContainerLevel($solid);
         $this->initNewTopLevel();
     }
 

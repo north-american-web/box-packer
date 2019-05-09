@@ -9,7 +9,7 @@ class AbstractContainer
      * NAWebCo_ShippingRules_SolidContainer constructor.
      * @param Solid $solid
      */
-    public function __construct(Solid $solid )
+    public function __construct(Solid $solid)
     {
         $this->setDimensionsBySolid($solid);
     }

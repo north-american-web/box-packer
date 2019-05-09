@@ -27,11 +27,16 @@ class Container extends AbstractContainer
 
     /**
      * SolidContainer constructor.
-     * @param Solid $solid
+     * @param $width
+     * @param $length
+     * @param int $height
+     * @param string $description
      */
-    public function __construct(Solid $solid)
+    public function __construct($width, $length, $height = 0, $description = '')
     {
+        $solid = new Solid($width, $length, $height);
         parent::__construct($solid);
+        $this->setDescription($description);
         $this->levelPrototype = new ContainerLevel($solid);
         $this->initNewTopLevel();
     }
@@ -52,7 +57,6 @@ class Container extends AbstractContainer
     /**
      * @param Solid $solid
      * @return bool
-     * @throws Exception
      */
     public function addSolid(Solid $solid)
     {
@@ -73,10 +77,17 @@ class Container extends AbstractContainer
         return $this->getContentsTotalHeight() <= $this->getHeight();
     }
 
+    public function reset()
+    {
+        $this->lowerLevels = [];
+        $this->completeLevelsTotalHeight = 0.0;
+        $this->topLevel = null;
+        $this->initNewTopLevel();
+    }
+
     /**
      * @param Solid $solid
      * @return bool
-     * @throws Exception
      */
     protected function attemptToAddSolidToLowerLevels(Solid $solid)
     {
@@ -127,6 +138,9 @@ class Container extends AbstractContainer
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getLevels()
     {
         return array_merge( $this->getLowerLevels(), [$this->topLevel]);

@@ -170,7 +170,7 @@ class ContainerLevel extends AbstractContainer
     {
         $this->containers = $this->getSpacesAbovePlacedSolidsAsContainers();
         foreach( $this->spaces as $space ){
-            $this->containers[] = Container::createFromDimensions(
+            $this->containers[] = new Container(
                 $space->getWidth(),
                 $space->getLength(),
                 $this->getContentsMaxHeight()
@@ -231,7 +231,7 @@ class ContainerLevel extends AbstractContainer
         foreach( $this->placedSolids as $solid ){
             $openHeight = $this->getContentsMaxHeight() - $solid->getHeight();
             if( $openHeight > 0 ){
-                $spaces[] = Container::createFromDimensions(
+                $spaces[] = new Container(
                     $solid->getWidth(),
                     $solid->getLength(),
                     $openHeight

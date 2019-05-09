@@ -1,8 +1,12 @@
 <?php
 
-namespace NAWebCo\BoxPacker;
+namespace NAWebCo\BoxPackerTest;
 
 use PHPUnit\Framework\TestCase;
+
+use NAWebCo\BoxPacker\Solid;
+use NAWebCo\BoxPacker\Container;
+use NAWebCo\BoxPacker\ContainerLevel;
 
 class ContainerTest extends TestCase
 {
@@ -15,7 +19,7 @@ class ContainerTest extends TestCase
         $levelMock->expects($this->once())->method('addSolid')->willReturn(true);
         $levelMock->expects($this->any())->method('getContentsMaxHeight')->willReturn(2.0);
 
-        $container = Container::createFromDimensions(4,4,4);
+        $container = new Container(4,4,4);
         $container->setLevelPrototype($levelMock);
 
         $result = $container->addSolid(new Solid(2, 2, 2));
@@ -35,7 +39,7 @@ class ContainerTest extends TestCase
             $levelMock->expects($this->any())->method('addSolid')->willReturn(true);
             $levelMock->expects($this->once())->method('getContentsCount')->willReturn($expectedCount);
 
-            $container = Container::createFromDimensions(4,4,4);
+            $container = new Container(4,4,4);
             $container->setLevelPrototype($levelMock);
 
             for( $n = 0; $n <= $expectedCount; $n++ ){
@@ -49,7 +53,7 @@ class ContainerTest extends TestCase
 //    public function testSortLevels()
 //    {
 //        /** @var SolidContainer $container */
-//        $container = Container::createFromDimensions(5, 5, 10);
+//        $container = new Container(5, 5, 10);
 //        $levelMock =  $this->getMockBuilder(ContainerLevel::class)
 //            ->disableOriginalConstructor()
 //            ->setMethods(['addSolid', 'attemptToAddContainers','attemptToAddToSpaces'])->getMock();

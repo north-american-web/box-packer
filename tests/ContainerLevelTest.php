@@ -1,7 +1,10 @@
 <?php
-namespace NAWebCo\BoxPacker;
+namespace NAWebCo\BoxPackerTest;
 
 use PHPUnit\Framework\TestCase;
+
+use NAWebCo\BoxPacker\Solid;
+use NAWebCo\BoxPacker\ContainerLevel;
 
 class ContainerLevelTest extends TestCase
 {
@@ -125,7 +128,7 @@ class ContainerLevelTest extends TestCase
 
 //    public function testGetKeyOfSmallestViableSpace()
 //    {
-//        $container = Container::createFromDimensions(3, 3, 1);
+//        $container = new Container(3, 3, 1);
 //        $container->addSolid(new Solid(2, 1));
 //
 //        $solid1 = new Solid(2,1);
@@ -138,7 +141,7 @@ class ContainerLevelTest extends TestCase
 
 //    public function testGetContentsCount()
 //    {
-//        $container = Container::createFromDimensions(10, 10, 10);
+//        $container = new Container(10, 10, 10);
 //        $container->addSolid(new Solid(2, 2, 2));
 //        $container->addSolid(new Solid(2, 2, 2));
 //

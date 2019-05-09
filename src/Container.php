@@ -20,11 +20,6 @@ class Container
     /**
      * @var ContainerLevel
      */
-    protected $levelPrototype;
-
-    /**
-     * @var ContainerLevel
-     */
     protected $topLevel;
 
     /**
@@ -180,16 +175,4 @@ class Container
     {
         return $this->topLevel->getContentsMaxHeight() + $this->completeLevelsTotalHeight;
     }
-
-    /**
-     * @param ContainerLevel $levelPrototype
-     * @return $this
-     */
-    public function setLevelPrototype(ContainerLevel $levelPrototype)
-    {
-        $this->levelPrototype = $levelPrototype;
-        $this->initNewTopLevel();
-        return $this;
-    }
-
 }

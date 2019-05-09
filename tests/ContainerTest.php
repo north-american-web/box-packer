@@ -7,20 +7,14 @@ use PHPUnit\Framework\TestCase;
 use NAWebCo\BoxPacker\Solid;
 use NAWebCo\BoxPacker\Container;
 use NAWebCo\BoxPacker\ContainerLevel;
+use Prophecy\Exception\InvalidArgumentException;
 
 class ContainerTest extends TestCase
 {
 
     public function testAddOneViableSolid()
     {
-        $levelMock =  $this->getMockBuilder(ContainerLevel::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['addSolid', 'getContentsMaxHeight'])->getMock();
-        $levelMock->expects($this->once())->method('addSolid')->willReturn(true);
-        $levelMock->expects($this->any())->method('getContentsMaxHeight')->willReturn(2.0);
-
         $container = new Container(4,4,4);
-        $container->setLevelPrototype($levelMock);
 
         $result = $container->addSolid(new Solid(2, 2, 2));
 
@@ -30,25 +24,33 @@ class ContainerTest extends TestCase
 
     public function testGetContentsCount()
     {
-        $iterations = 5;
+        $container = new Container(2,2,2);
 
-        for( $expectedCount = 1; $expectedCount <= $iterations; $expectedCount++ ){
-            $levelMock =  $this->getMockBuilder(ContainerLevel::class)
-                ->disableOriginalConstructor()
-                ->setMethods(['addSolid', 'getContentsCount'])->getMock();
-            $levelMock->expects($this->any())->method('addSolid')->willReturn(true);
-            $levelMock->expects($this->once())->method('getContentsCount')->willReturn($expectedCount);
+        // This will require 2 levels
+        $container->addSolid(new Solid(2,2,1));
+        $container->addSolid(new Solid(1,1,1));
+        $container->addSolid(new Solid(1,1,1));
 
-            $container = new Container(4,4,4);
-            $container->setLevelPrototype($levelMock);
-
-            for( $n = 0; $n <= $expectedCount; $n++ ){
-                $container->addSolid(new Solid(1,1,1));
-            }
-
-            $this->assertEquals($expectedCount, $container->getContentsCount());
-        }
+        $this->assertEquals(3, $container->getContentsCount());
     }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testInvalidDimensions()
+    {
+        new Container(1,1,0);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testSetInvalidHeight()
+    {
+        $container = new Container(1,1,1);
+        $container->setHeight(-1);
+    }
+
 
 //    public function testSortLevels()
 //    {

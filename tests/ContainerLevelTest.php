@@ -1,6 +1,8 @@
 <?php
+
 namespace NAWebCo\BoxPackerTest;
 
+use NAWebCo\BoxPacker\Container;
 use PHPUnit\Framework\TestCase;
 
 use NAWebCo\BoxPacker\Solid;
@@ -9,19 +11,12 @@ use NAWebCo\BoxPacker\ContainerLevel;
 class ContainerLevelTest extends TestCase
 {
 
-    public function testCreateFromDimensions()
-    {
-        $container = ContainerLevel::createFromDimensions(3, 2, 1);
-        $this->assertInstanceOf(ContainerLevel::class, $container);
-    }
-
     /**
      * @expectedException \InvalidArgumentException
      */
     public function testConstructWithInvalidDimensions()
     {
-        $solid = new Solid(3, 2, 0);
-        new ContainerLevel($solid);
+        new ContainerLevel(3, 0);
     }
 
     /**
@@ -35,15 +30,15 @@ class ContainerLevelTest extends TestCase
     public function testCalculateNewOpenAreasWithValidDimensions($sWidth, $sLength, $cWidth, $cLength, $expectedDimensions)
     {
         $solid = new Solid($sWidth, $sLength);
-        $containerSolid = new Solid($cWidth, $cLength, 1);
-        $container = new ContainerLevel($containerSolid);
+        $containerSpace = new Solid($cWidth, $cLength);
+        $level = new ContainerLevel(5, 5 ); // These dimensions don't matter for this test.
 
         $expectedSolids = [];
         foreach ($expectedDimensions as $expectSolidDimensions) {
             $expectedSolids[] = new Solid($expectSolidDimensions[0], $expectSolidDimensions[1]);
         }
 
-        $this->assertEquals($expectedSolids, $container->calculateNewSpaces($solid, $containerSolid));
+        $this->assertEquals($expectedSolids, $level->calculateNewSpaces($solid, $containerSpace));
     }
 
     public function calculateNewOpenAreasWithValidDimensionsData()
@@ -62,14 +57,14 @@ class ContainerLevelTest extends TestCase
     {
         $solid = new Solid(3, 1);
         $containerSolid = new Solid(2, 2, 1);
-        $container = new ContainerLevel($containerSolid);
+        $level = new ContainerLevel(5,5 ); // These dimensions don't matter for this test.
 
-        $container->calculateNewSpaces($solid, $containerSolid);
+        $level->calculateNewSpaces($solid, $containerSolid);
     }
 
     public function getContentsMaxHeight()
     {
-        $container = ContainerLevel::createFromDimensions(5, 1, 5);
+        $container = new ContainerLevel(5, 1);
         $container->addSolid(new Solid(1, 1, 1));
         $container->addSolid(new Solid(1, 1, 3));
         $container->addSolid(new Solid(1, 1, 2));
@@ -79,7 +74,7 @@ class ContainerLevelTest extends TestCase
 
     public function testAddToSubcontainers()
     {
-        $level = ContainerLevel::createFromDimensions(4, 4, 4);
+        $level = new ContainerLevel(4, 4);
 
         // This one goes into a space (not a container)
         $this->assertTrue($level->addSolid(new Solid(4, 3, 2)));
@@ -101,7 +96,7 @@ class ContainerLevelTest extends TestCase
     {
         $iterations = 5;
         for ($expectedCount = 0; $expectedCount < $iterations; $expectedCount++) {
-            $level = ContainerLevel::createFromDimensions(4, 4, 4);
+            $level = new ContainerLevel(4, 4);
 
             for ($i = 0; $i < $expectedCount; $i++) {
                 $level->addSolid(new Solid(1, 1, 1));
@@ -110,21 +105,30 @@ class ContainerLevelTest extends TestCase
         }
     }
 
-    /**
-     * @throws Exception
-     */
     public function testGetMultiLevelContentsCount()
     {
-        $level = ContainerLevel::createFromDimensions(4, 4, 4);
+        $level = new ContainerLevel(4, 4);
 
-        $level->addSolid(new Solid(4, 3, 2));
-        $level->addSolid(new Solid(4, 3, 2));
-        $level->addSolid(new Solid(4, 1, 1));
-        $level->addSolid(new Solid(4, 1, 1));
-        $level->addSolid(new Solid(4, 1, 1));
+        $level->addSolid(new Solid(4, 3, 2, 'box1'));
+        $level->addSolid(new Solid(4, 1, 1, 'box2'));
+        $level->addSolid(new Solid(4, 1, 1, 'box3'));
 
-        $this->assertEquals(4, $level->getContentsCount());
+        $this->assertEquals(3, $level->getContentsCount());
     }
+
+//    public function testGetPackedSolids()
+//    {
+//        $level = new ContainerLevel(4, 4);
+//
+//        $level->addSolid(new Solid(4, 3, 2));
+//        $level->addSolid(new Solid(4, 1, 1));
+//        $level->addSolid(new Solid(4, 1, 1));
+//        $level->addSolid(new Solid(4, 1, 1));
+//
+////        var_dump($level->getPackedSolids());
+//
+//        $this->assertCount(4, $level->getPackedSolids());
+//    }
 
 //    public function testGetKeyOfSmallestViableSpace()
 //    {

@@ -1,8 +1,10 @@
 <?php
 
-namespace NAWebCo\BoxPacker;
+namespace NAWebCo\BoxPackerTest;
 
 use PHPUnit\Framework\TestCase;
+
+use NAWebCo\BoxPacker\Solid;
 
 class SolidTest extends TestCase
 {

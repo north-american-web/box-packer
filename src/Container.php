@@ -129,13 +129,12 @@ class Container
     }
 
     /**
-     * Initialize the prototype with the right dimension as the top level).
+     * Initialize new level with the right dimension as the top level).
      * @return $this
      */
     protected function initNewTopLevel()
     {
-        $this->topLevel = clone $this->levelPrototype;
-        $this->topLevel->setDimensionsBySolid($this->getDimensionsAsSolid());
+        $this->topLevel = new ContainerLevel( $this->getWidth(), $this->getLength());
         return $this;
     }
 

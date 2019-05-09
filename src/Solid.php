@@ -7,13 +7,6 @@ class Solid
     use DescribableTrait;
 
     /**
-     * A name or id for this item.
-     *
-     * @var string
-     */
-    protected $description;
-
-    /**
      * NAWebCo_ShippingRules_Solid constructor.
      * @param float $width
      * @param float $length

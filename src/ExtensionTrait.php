@@ -28,7 +28,7 @@ trait ExtensionTrait
      * @param int $height
      * @return $this
      */
-    protected function setDimensions($width, $length, $height = 0)
+    protected function setDimensions($width, $length, $height = 0.0)
     {
         $this->setWidth($width);
         $this->setLength($length);

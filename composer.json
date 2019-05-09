@@ -1,0 +1,22 @@
+{
+  "name": "nawebco/box-packer",
+  "description": "Yet another solution to the packing/knapsack problem.",
+  "authors": [
+    {
+      "name": "David Kidd",
+      "role": "Developer"
+    }
+  ],
+  "license": "MIT",
+  "require": {
+    "php": ">=5.4"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "NAWebCo\\BoxPacker\\": "src/"
+    }
+  }
+}

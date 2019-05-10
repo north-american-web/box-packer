@@ -116,40 +116,16 @@ class ContainerLevelTest extends TestCase
         $this->assertEquals(3, $level->getContentsCount());
     }
 
-//    public function testGetPackedSolids()
-//    {
-//        $level = new ContainerLevel(4, 4);
-//
-//        $level->addSolid(new Solid(4, 3, 2));
-//        $level->addSolid(new Solid(4, 1, 1));
-//        $level->addSolid(new Solid(4, 1, 1));
-//        $level->addSolid(new Solid(4, 1, 1));
-//
-////        var_dump($level->getPackedSolids());
-//
-//        $this->assertCount(4, $level->getPackedSolids());
-//    }
+    public function testGetPackedSolids()
+    {
+        $level = new ContainerLevel(4, 4);
 
-//    public function testGetKeyOfSmallestViableSpace()
-//    {
-//        $container = new Container(3, 3, 1);
-//        $container->addSolid(new Solid(2, 1));
-//
-//        $solid1 = new Solid(2,1);
-//        $this->assertEquals(1, $container->getKeyOfSmallestViableSpace($solid1));
-//
-//        $solid2 = new Solid(1, 1);
-//        $this->assertEquals(0, $container->getKeyOfSmallestViableSpace($solid2));
-//    }
+        $level->addSolid(new Solid(4, 3, 2));
+        $level->addSolid(new Solid(4, 1, 1));
+        $level->addSolid(new Solid(4, 1, 1));
+        $level->addSolid(new Solid(4, 1, 1));
 
-
-//    public function testGetContentsCount()
-//    {
-//        $container = new Container(10, 10, 10);
-//        $container->addSolid(new Solid(2, 2, 2));
-//        $container->addSolid(new Solid(2, 2, 2));
-//
-//        $this->assertEquals(2, $container->getContentsCount());
-//    }
+        $this->assertCount(4, $level->getPackedSolids());
+    }
 
 }

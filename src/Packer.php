@@ -12,14 +12,14 @@ class Packer
     protected $containers = [];
 
     /**
-     * @var Solid[]
+     * @var SolidInterface[]
      */
     protected $items = [];
 
     /**
      * Packer constructor.
      * @param Container|Container[] $containers
-     * @param Solid[] $items
+     * @param SolidInterface[] $items
      */
     public function __construct($containers = [], $items = [])
     {
@@ -71,10 +71,10 @@ class Packer
     }
 
     /**
-     * @param Solid $solid
+     * @param SolidInterface $solid
      * @return $this
      */
-    public function addItem(Solid $solid)
+    public function addItem(SolidInterface $solid)
     {
         $this->items[] = $solid;
         return $this;
@@ -119,8 +119,8 @@ class Packer
     protected function sortObjects(&$objects)
     {
         usort($objects, function ($a, $b) {
-            /** @var Solid $a */
-            /** @var Solid $b */
+            /** @var SolidInterface $a */
+            /** @var SolidInterface $b */
             if ($a->getVolume() === $b->getVolume()) {
                 $aDimensions = $a->getSortedDimensionsArray();
                 $bDimensions = $b->getSortedDimensionsArray();

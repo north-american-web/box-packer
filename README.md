@@ -67,6 +67,9 @@ if( $result->success() ){
 }
 ```
 
+In the example above, packable items are represented by the `Solid` class. Any class that implements the `SolidInterface`
+can be run through the Packer.
+
 ##Requirements
 * PHP version 5.6 or higher
 

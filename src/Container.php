@@ -2,7 +2,7 @@
 
 namespace NAWebCo\BoxPacker;
 
-class Container
+class Container implements SolidInterface
 {
     use ExtensionTrait;
     use DescribableTrait;

@@ -56,10 +56,10 @@ class Container
     }
 
     /**
-     * @param Solid $solid
+     * @param SolidInterface $solid
      * @return bool
      */
-    public function addSolid(Solid $solid)
+    public function addSolid(SolidInterface $solid)
     {
         if (!$this->attemptToAddSolidToLowerLevels($solid)) {
             if (!$this->topLevel->addSolid($solid)) {
@@ -81,7 +81,7 @@ class Container
     /**
      * Get all the solids packed in this container.
      *
-     * @return Solid[]
+     * @return SolidInterface[]
      */
     public function getPackedSolids()
     {
@@ -107,10 +107,10 @@ class Container
     }
 
     /**
-     * @param Solid $solid
+     * @param SolidInterface $solid
      * @return bool
      */
-    protected function attemptToAddSolidToLowerLevels(Solid $solid)
+    protected function attemptToAddSolidToLowerLevels(SolidInterface $solid)
     {
         foreach ($this->lowerLevels as $level) {
             if ($level->addSolid($solid)) {

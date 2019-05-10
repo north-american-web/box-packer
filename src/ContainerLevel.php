@@ -18,12 +18,12 @@ class ContainerLevel
     protected $contentsMaxHeight = 0.0;
 
     /**
-     * @var Solid[]
+     * @var SolidInterface[]
      */
     protected $packedSolids = [];
 
     /**
-     * @var Solid[]
+     * @var SolidInterface[]
      */
     protected $spaces = [];
 
@@ -45,10 +45,10 @@ class ContainerLevel
     }
 
     /**
-     * @param Solid $solid
+     * @param SolidInterface $solid
      * @return bool
      */
-    public function addSolid(Solid $solid)
+    public function addSolid(SolidInterface $solid)
     {
         if( $this->containers ){
             return $this->attemptToAddToContainers($solid);
@@ -84,7 +84,7 @@ class ContainerLevel
     /**
      * Get all the solids packed in this layer (including in containers)
      *
-     * @return Solid[]
+     * @return SolidInterface[]
      */
     public function getPackedSolids()
     {
@@ -104,12 +104,12 @@ class ContainerLevel
      * the area. The solid will rest along (at least) two edges of the area and will be oriented to yield the largest
      * possible remaining space.
      *
-     * @param Solid $item
-     * @param Solid $area
+     * @param SolidInterface $item
+     * @param SolidInterface $area
      * @return array
      * @throws InvalidArgumentException
      */
-    public function calculateNewSpaces(Solid $item, Solid $area)
+    public function calculateNewSpaces(SolidInterface $item, SolidInterface $area)
     {
         if( !$area->canContainBaseWithoutXOrYAxisRotation($item) ){
             throw new InvalidArgumentException('Item cannot fit in the container.');
@@ -144,10 +144,10 @@ class ContainerLevel
     }
 
     /**
-     * @param Solid $solid
+     * @param SolidInterface $solid
      * @return bool
      */
-    protected function attemptToAddToContainers(Solid $solid)
+    protected function attemptToAddToContainers(SolidInterface $solid)
     {
         if( !$this->containers ){
             return false;
@@ -162,10 +162,10 @@ class ContainerLevel
     }
 
     /**
-     * @param Solid $solid
+     * @param SolidInterface $solid
      * @return bool
      */
-    protected function attemptToAddToSpaces(Solid $solid)
+    protected function attemptToAddToSpaces(SolidInterface $solid)
     {
         $viableSpaceKey = $this->getKeyOfSmallestViableSpace($solid);
 
@@ -213,10 +213,10 @@ class ContainerLevel
     }
 
     /**
-     * @param Solid $solid
+     * @param SolidInterface $solid
      * @return int|null
      */
-    protected function getKeyOfSmallestViableSpace(Solid $solid)
+    protected function getKeyOfSmallestViableSpace(SolidInterface $solid)
     {
         if( !$this->spaces ){
             return null;
@@ -224,7 +224,7 @@ class ContainerLevel
 
         foreach ($this->spaces as $key => $space) {
             /**
-             * @var Solid $space
+             * @var SolidInterface $space
              */
             if ($space->canContainBaseWithoutXOrYAxisRotation($solid)) {
                 return $key;
@@ -234,11 +234,11 @@ class ContainerLevel
     }
 
     /**
-     * @param Solid $solid
+     * @param SolidInterface $solid
      * @param int $spaceKey
      * @throws InvalidArgumentException
      */
-    protected function placeSolidInSpace(Solid $solid, $spaceKey)
+    protected function placeSolidInSpace(SolidInterface $solid, $spaceKey)
     {
         if (!array_key_exists($spaceKey, $this->spaces)) {
             throw new InvalidArgumentException('Invalid open area key.');
@@ -281,8 +281,8 @@ class ContainerLevel
     protected function sortSolids( &$solids )
     {
         usort($solids, function ($a, $b) {
-            /** @var Solid $a */
-            /** @var Solid $b */
+            /** @var SolidInterface $a */
+            /** @var SolidInterface $b */
             if ($a->getWidth() == $b->getWidth()) {
                 if ($a->getLength() == $b->getLength()) {
                     return 0;

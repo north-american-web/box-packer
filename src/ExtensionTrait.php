@@ -99,6 +99,34 @@ trait ExtensionTrait
     }
 
     /**
+     * Test whether this solid can contains another given one.
+     *
+     * @param SolidInterface $solid
+     * @return bool
+     */
+    public function canContain(SolidInterface $solid)
+    {
+        $thisDimensions = $this->getSortedDimensionsArray();
+        $solidDimensions = $solid->getSortedDimensionsArray();
+
+        return $thisDimensions[0] >= $solidDimensions[0]
+            && $thisDimensions[1] >= $solidDimensions[1]
+            && $thisDimensions[2] >= $solidDimensions[2];
+    }
+
+    /**
+     * Test whether a solid's base can fit within this solid's base without reorientation on the x or y axis.
+     *
+     * @param SolidInterface $solid
+     * @return bool
+     */
+    public function canContainBaseWithoutXOrYAxisRotation(SolidInterface $solid)
+    {
+        return ($this->getWidth() >= $solid->getWidth() && $this->getLength() >= $solid->getLength())
+            || ($this->getLength() >= $solid->getWidth() && $this->getWidth() >= $solid->getLength());
+    }
+
+    /**
      * Make longest dimension width, middle dimension length, and shortest dimension height.
      *
      * @return $this

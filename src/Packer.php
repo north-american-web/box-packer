@@ -124,11 +124,11 @@ class Packer
             if ($a->getVolume() === $b->getVolume()) {
                 $aDimensions = $a->getSortedDimensionsArray();
                 $bDimensions = $b->getSortedDimensionsArray();
-                if ($aDimensions[0] === $bDimensions[0]) {
+                if ($aDimensions['width'] === $bDimensions['width']) {
                     return 0;
                 }
 
-                return $aDimensions[0] > $bDimensions[0] ? -1 : 1;
+                return $aDimensions['width'] > $bDimensions['width'] ? -1 : 1;
             }
 
             return $a->getVolume() > $b->getVolume() ? -1 : 1;

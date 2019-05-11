@@ -28,4 +28,6 @@ interface SolidInterface
     public function rotateY();
 
     public function rotateZ();
+
+    public function toArray();
 }

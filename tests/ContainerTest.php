@@ -51,6 +51,28 @@ class ContainerTest extends TestCase
         $container->setHeight(-1);
     }
 
+    public function testToArrayWithStackedItems()
+    {
+        $container = new Container(2,2,2, 'container');
+        $solid1 = new Solid(2,2,1, 'box 1');
+        $solid2 = new Solid(2,2,1, 'box 2');
+        $container->addSolid($solid1);
+        $container->addSolid($solid2);
+
+        $expected = [
+            'width' => 2.0,
+            'length' => 2.0,
+            'height' => 2.0,
+            'description' => 'container',
+            'contents' => [
+                [ 'width' => 2.0, 'length' => 2.0, 'height' => 1.0, 'description' => 'box 1'  ],
+                [ 'width' => 2.0, 'length' => 2.0, 'height' => 1.0, 'description' => 'box 2'  ]
+            ]
+        ];
+
+        $this->assertEquals($expected, $container->toArray());
+    }
+
 
 //    public function testSortLevels()
 //    {

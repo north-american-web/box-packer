@@ -23,6 +23,18 @@ trait ExtensionTrait
     protected $width;
 
     /**
+     * @return array
+     */
+    protected function getDimensions()
+    {
+        return [
+            'width' => $this->getWidth(),
+            'length' => $this->getLength(),
+            'height' => $this->getHeight(),
+        ];
+    }
+
+    /**
      * @param $width
      * @param $length
      * @param int $height
@@ -109,9 +121,9 @@ trait ExtensionTrait
         $thisDimensions = $this->getSortedDimensionsArray();
         $solidDimensions = $solid->getSortedDimensionsArray();
 
-        return $thisDimensions[0] >= $solidDimensions[0]
-            && $thisDimensions[1] >= $solidDimensions[1]
-            && $thisDimensions[2] >= $solidDimensions[2];
+        return $thisDimensions['width'] >= $solidDimensions['width']
+            && $thisDimensions['length'] >= $solidDimensions['length']
+            && $thisDimensions['height'] >= $solidDimensions['height'];
     }
 
     /**
@@ -135,9 +147,9 @@ trait ExtensionTrait
     {
         $dimensions = $this->getSortedDimensionsArray();
 
-        $this->width = $dimensions[0];
-        $this->length = $dimensions[1];
-        $this->height = $dimensions[2];
+        $this->width = current($dimensions);
+        $this->length = next($dimensions);
+        $this->height = next($dimensions);
 
         return $this;
     }
@@ -149,8 +161,8 @@ trait ExtensionTrait
      */
     public function getSortedDimensionsArray()
     {
-        $dimensions = [$this->getWidth(), $this->getLength(), $this->getHeight()];
-        rsort($dimensions);
+        $dimensions = $this->getDimensions();
+        arsort($dimensions);
         return $dimensions;
     }
 

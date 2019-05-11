@@ -52,7 +52,13 @@ class SolidTest extends TestCase
         $solid = new Solid(3,2,1);
         $solid->rotateX();
 
-        $this->assertEquals([3,2,1], $solid->getSortedDimensionsArray());
+        $expected = [
+            'width' => 3.0,
+            'height' => 2.0,
+            'length' => 1.0
+        ];
+
+        $this->assertEquals($expected, $solid->getSortedDimensionsArray());
     }
 
     /**
@@ -145,6 +151,34 @@ class SolidTest extends TestCase
         $solid->rotateZ();
 
         $this->assertEquals([2,3,1], [$solid->getWidth(), $solid->getLength(), $solid->getHeight()]);
+    }
+
+    public function testWithoutDescriptionToArray()
+    {
+        $expected = [
+            'width' => 3.0,
+            'length' => 2.0,
+            'height' => 1.0,
+            'description' => null
+        ];
+
+        $solid = new Solid($expected['width'], $expected['length'], $expected['height']);
+
+        $this->assertEquals($expected, $solid->toArray());
+    }
+
+    public function testWithDescriptionToArray()
+    {
+        $expected = [
+            'width' => 3.0,
+            'length' => 2.0,
+            'height' => 1.0,
+            'description' => 'description string'
+        ];
+
+        $solid = new Solid($expected['width'], $expected['length'], $expected['height'], $expected['description']);
+
+        $this->assertEquals($expected, $solid->toArray());
     }
 
 }

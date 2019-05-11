@@ -30,4 +30,5 @@ trait DescribableTrait
         $this->description = $description;
         return $this;
     }
+
 }

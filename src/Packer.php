@@ -108,7 +108,7 @@ class Packer
             }
         }
 
-        return new PackingResult($this->containers, $notPacked);
+        return new PackingResult($this->containers, array_values($notPacked));
     }
 
     /**

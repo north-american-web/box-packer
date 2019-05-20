@@ -7,6 +7,10 @@ namespace NAWebCo\BoxPacker;
 interface SolidInterface
 {
 
+    public function getId();
+
+    public function setId($id);
+
     public function getWidth();
 
     public function getLength();

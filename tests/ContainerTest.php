@@ -73,6 +73,20 @@ class ContainerTest extends TestCase
         $this->assertEquals($expected, $container->toArray());
     }
 
+    public function testContainerDoesNotRetainTooTallItem()
+    {
+        $container = new Container(2,2,3, 'container');
+        $solid1 = new Solid(2,2,2, 'box 1');
+        $solid2 = new Solid(2,2,2, 'box 2');
+        $container->addSolid($solid1);
+        $container->addSolid($solid2);
+
+        $expected = [
+            $solid1
+        ];
+
+        $this->assertEquals($expected, $container->getContents());
+    }
 
 //    public function testSortLevels()
 //    {

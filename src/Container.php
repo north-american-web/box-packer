@@ -63,15 +63,19 @@ class Container implements SolidInterface, JsonSerializable
      */
     public function addSolid(SolidInterface $solid)
     {
+        if( $solid->getHeight() > $this->getHeight() ){
+            return false;
+        }
+
         if (!$this->attemptToAddSolidToLowerLevels($solid)) {
-            if (!$this->topLevel->addSolid($solid)) {
+            if (!$this->addSolidToLevel( $solid, $this->topLevel )) {
                 if ($this->topLevel->getContentsCount() == 0) {
                     return false;
                 }
 
                 // Add another level and try again.
                 $this->addNewLevel();
-                if (!$this->topLevel->addSolid($solid)) {
+                if (!$this->addSolidToLevel( $solid, $this->topLevel )) {
                     return false;
                 }
             }
@@ -81,16 +85,47 @@ class Container implements SolidInterface, JsonSerializable
     }
 
     /**
+     * Remove a solid with a given id from the container (if it exists).
+     *
+     * @param $id
+     * @return bool Indicates whether a solid was found
+     */
+    public function removeSolid($id)
+    {
+        foreach( $this->getLevels() as $level ){
+            if( $level->removeSolid($id) ){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param SolidInterface $solid
+     * @param ContainerLevel $level
+     * @return bool
+     */
+    protected function addSolidToLevel(SolidInterface $solid, ContainerLevel $level )
+    {
+        if( ($result = $level->addSolid($solid)) && $this->getContentsTotalHeight() > $this->getHeight() ){
+            $level->removeSolid($solid->getId());
+            return false;
+        }
+
+        return $result;
+    }
+
+    /**
      * Get all the solids packed in this container.
      *
      * @return SolidInterface[]
      */
-    public function getPackedSolids()
+    public function getContents()
     {
         $solids = [];
         foreach ($this->getLevels() as $level) {
             /** @var ContainerLevel $level */
-            $solids = array_merge($solids, $level->getPackedSolids());
+            $solids = array_merge($solids, array_values($level->getContents()));
         }
         return $solids;
     }
@@ -115,7 +150,7 @@ class Container implements SolidInterface, JsonSerializable
     protected function attemptToAddSolidToLowerLevels(SolidInterface $solid)
     {
         foreach ($this->lowerLevels as $level) {
-            if ($level->addSolid($solid)) {
+            if ($this->addSolidToLevel( $solid, $level)) {
                 return true;
             }
         }
@@ -206,7 +241,7 @@ class Container implements SolidInterface, JsonSerializable
         $data['description'] = $this->getDescription();
         $data['contents'] = [];
 
-        foreach( $this->getPackedSolids() as $solid){
+        foreach($this->getContents() as $solid){
             $data['contents'][] = $solid->toArray();
         }
 

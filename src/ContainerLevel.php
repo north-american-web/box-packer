@@ -58,6 +58,27 @@ class ContainerLevel
     }
 
     /**
+     * Remove an already-packed solid (if it exists.
+     *
+     * @param mixed $id
+     * @return bool Indicates whether the solid was found
+     */
+    public function removeSolid($id)
+    {
+        if( array_key_exists($id, $this->packedSolids)){
+            unset($this->packedSolids[$id]);
+            return true;
+        }
+
+        foreach( $this->containers as $container ){
+            if( $container->removeSolid($id) ){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * @return int
      */
     public function getContentsCount()
@@ -86,13 +107,13 @@ class ContainerLevel
      *
      * @return SolidInterface[]
      */
-    public function getPackedSolids()
+    public function getContents()
     {
         $packed = $this->packedSolids;
         if( $this->containers ){
             foreach( $this->containers as $container ){
                 /** @var Container $container */
-                $packed = array_merge( $packed, $container->getPackedSolids());
+                $packed = array_merge( $packed, $container->getContents());
             }
         }
 
@@ -109,7 +130,7 @@ class ContainerLevel
      * @return array
      * @throws InvalidArgumentException
      */
-    public function calculateNewSpaces(SolidInterface $item, SolidInterface $area)
+    protected function calculateNewSpaces(SolidInterface $item, SolidInterface $area)
     {
         if( !$area->canContainBaseWithoutXOrYAxisRotation($item) ){
             throw new InvalidArgumentException('Item cannot fit in the container.');
@@ -250,7 +271,7 @@ class ContainerLevel
         $this->spaces = array_merge($this->spaces, $this->calculateNewSpaces($solid, $space));
         $this->sortSolids($this->spaces);
 
-        $this->packedSolids[] = $solid;
+        $this->packedSolids[$solid->getId()] = $solid;
     }
 
     /**

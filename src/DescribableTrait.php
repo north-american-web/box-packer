@@ -6,12 +6,18 @@ namespace NAWebCo\BoxPacker;
 
 trait DescribableTrait
 {
+
     /**
-     * A name or id for this item.
+     * A description of this item.
      *
      * @var string
      */
     protected $description;
+
+    /**
+     * @var string
+     */
+    protected $id;
 
     /**
      * @return mixed
@@ -30,5 +36,25 @@ trait DescribableTrait
         $this->description = $description;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param $id
+     * @return DescribableTrait
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+
 
 }

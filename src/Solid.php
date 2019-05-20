@@ -16,6 +16,7 @@ class Solid implements SolidInterface, JsonSerializable
      */
     public function __construct($width, $length, $height = 0.0, $description = null)
     {
+        $this->setId(uniqid());
         $this->setDimensions( (float)$width, (float)$length, (float)$height);
         $this->description = $description;
 

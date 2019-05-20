@@ -20,7 +20,7 @@ above other items), unless doing so would increase the height of the layer.
 * Each time a new layer is started, the algorithm checks to make sure the total height of the layers hasn't exceeded the 
 box height.
 
-##Using NAWebCo\BoxPacker
+## Using NAWebCo\BoxPacker
 To install, run ```composer require nawebco/box-packer``` in your project's root directory. If you aren't already using
 Composer's autoloader, be sure to require `vendor/autoload.php` wherever you need access to the BoxPacker.
 
@@ -70,8 +70,8 @@ if( $result->success() ){
 In the example above, packable items are represented by the `Solid` class. Any class that implements the `SolidInterface`
 can be run through the Packer.
 
-##Requirements
+## Requirements
 * PHP version 5.6 or higher
 
-##License
+## License
 NAWebCo\BoxPacker is MIT-licensed.

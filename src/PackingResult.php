@@ -67,34 +67,48 @@ class PackingResult
 
     /**
      * @param Solid{}|Container[] $things
+     * @param bool $includeContents
      * @return array
      */
-    protected function getObjectReferencesFromSolidsOrContainers($things)
+    protected function getObjectReferencesFromSolidsOrContainers($things, $includeContents = false)
     {
         if( !$things ){
             return [];
         }
 
-        return array_map(function($container){
+
+        return array_map(function($container) use ($includeContents){
             /** @var Container $container */
+
+            if( $includeContents ){
+                return [
+                    'box' => $container->getObjectReference(),
+                    'contents' => array_map(function($solid){
+                            return $solid->getObjectReference();
+                        }, $container->getContents()
+                    )
+                ];
+            }
             return $container->getObjectReference();
         }, $things);
     }
 
     /**
+     * @param bool $includeContents
      * @return array
      */
-    public function getPackedBoxes()
+    public function getPackedBoxes($includeContents = true)
     {
-        return $this->getObjectReferencesFromSolidsOrContainers($this->packedContainers);
+        return $this->getObjectReferencesFromSolidsOrContainers($this->packedContainers, $includeContents);
     }
 
     /**
+     * @param bool $includeContents
      * @return array
      */
-    public function getEmptyBoxes()
+    public function getEmptyBoxes($includeContents = true)
     {
-        return $this->getObjectReferencesFromSolidsOrContainers($this->emptyContainers);
+        return $this->getObjectReferencesFromSolidsOrContainers($this->emptyContainers, $includeContents);
     }
 
     /**

@@ -30,34 +30,34 @@ Usage example:
 require 'vendor/autoload.php';
 
 use NAWebCo\BoxPacker\Packer;
-use NAWebCo\BoxPacker\Container;
-use NAWebCo\BoxPacker\Solid;
+use NAWebCo\BoxPacker\GenericPackable;
 
 
 $packer = new Packer();
 
 // Width, length, height, description
 // The order of the dimensions doesn't matter.
-$packer->addContainer(new Container(10, 15, 6, 'Big box'));
+$packer->addBox(new GenericPackable(10, 15, 6, 'Big box'));
 
 // Width, length, height, description
 // The order of the dimensions doesn't matter.
-$packer->addItem(new Solid(8.5, 11, 2, 'First book'));
-$packer->addItem(new Solid(8.5, 11, 1.2, 'Second book'));
-$packer->addItem(new Solid(3, 3, 3, 'Carved wooden block'));
+$packer->addItem(new GenericPackable(8.5, 11, 2, 'First book'));
+$packer->addItem(new GenericPackable(8.5, 11, 1.2, 'Second book'));
+$packer->addItem(new GenericPackable(3, 3, 3, 'Carved wooden block'));
 
 $result = $packer->pack();
-
-$packedBoxes = $result->getPackedContainers();
 
 if( $result->success() ){
     echo "Everything fits!\n\n";
 
-    foreach( $result->getPackedContainers() as $box ){
+    foreach( $result->getPackedBoxes(true) as $boxResults ){
+        $box = $boxResults['box'];
+        $contents = $boxResults['contents'];
+
         $containerDescription = $box->getDescription() ?: 'One box';
         echo "$containerDescription contains:\n";
 
-        foreach( $box->getPackedSolids() as $item ){
+        foreach( $contents as $item ){
             $itemDescription = $item->getDescription() ?: 'Item';
             echo "$itemDescription ({$item->getWidth()}, {$item->getLength()}, {$item->getHeight()})\n";
         }

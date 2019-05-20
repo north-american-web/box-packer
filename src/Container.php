@@ -4,10 +4,11 @@ namespace NAWebCo\BoxPacker;
 
 use JsonSerializable;
 
-class Container implements SolidInterface, JsonSerializable
+class Container implements PackableInterface, SolidInterface, JsonSerializable
 {
     use ExtensionTrait;
     use DescribableTrait;
+    use ObjectReferenceTrait;
 
     /**
      * @var ContainerLevel[]

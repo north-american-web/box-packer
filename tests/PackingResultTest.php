@@ -3,6 +3,7 @@
 
 namespace NAWebCo\BoxPackerTest;
 
+use NAWebCo\BoxPacker\GenericPackable;
 use PHPUnit\Framework\TestCase;
 
 use NAWebCo\BoxPacker\Solid;
@@ -39,22 +40,30 @@ class PackingResultTest extends TestCase
 
     public function testGetPackedAndEmptyContainers()
     {
-        $containers = [
-            new Container(1,1,1),
-            new Container(2,2,2),
-        ];
-        foreach( $containers as $container ){
-            /** @var Container $container */
-            $container->addSolid(new Solid(1,1,1));
-        }
+        $fullBox = new GenericPackable(1,1,1, 'full box');
+        $emptyBox = new GenericPackable(1,1,1, 'empty box');
 
-        $containers[] = new Container(1,1,1);
+        $fullContainer = $this->createMock(Container::class);
+        $fullContainer->method('getObjectReference')->willReturn($fullBox);
+        $fullContainer->method('getContentsCount')->willReturn(2);
 
-        $result = new PackingResult($containers, []);
+        $emptyContainer = $this->createMock(Container::class);
+        $emptyContainer->method('getObjectReference')->willReturn($emptyBox);
+        $emptyContainer->method('getContentsCount')->willReturn(0);
 
-        $this->assertCount(2, $result->getPackedContainers());
-        $this->assertCount(1, $result->getEmptyContainers());
+        $packingResult = new PackingResult([$fullContainer, $emptyContainer], []);
+
+        $this->assertEquals([$fullBox], $packingResult->getPackedBoxes());
+        $this->assertEquals([$emptyBox], $packingResult->getEmptyBoxes());
     }
 
+    public function testGetNotPackedItems()
+    {
+        $item = new GenericPackable(1,2,3);
+        $solid = (new Solid(1,1,1))->setObjectReference($item);
+        $packingResult = new PackingResult([], [$solid]);
+
+        $this->assertEquals([$item], $packingResult->getNotPackedItems());
+    }
 
 }

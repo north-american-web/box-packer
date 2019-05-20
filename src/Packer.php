@@ -14,48 +14,60 @@ class Packer
     /**
      * @var SolidInterface[]
      */
-    protected $items = [];
+    protected $solids = [];
 
     /**
      * Packer constructor.
-     * @param Container|Container[] $containers
+     * @param Container|Container[] $boxes
      * @param SolidInterface[] $items
      */
-    public function __construct($containers = [], $items = [])
+    public function __construct($boxes = [], $items = [])
     {
-        $this->setContainers($containers);
+        $this->setBoxes($boxes);
         $this->setItems($items);
     }
 
     /**
-     * @param Container|Container[] $containers
+     * @param PackableInterface[] $boxes
      * @return $this
      */
-    public function setContainers($containers)
+    public function setBoxes($boxes)
     {
-        if (is_array($containers)) {
-            foreach ($containers as $container) {
-                $this->addContainer($container);
+        if (is_array($boxes)) {
+            foreach ($boxes as $container) {
+                $this->addBox($container);
             }
         } else {
-            $this->addContainer($containers);
+            $this->addBox($boxes);
         }
 
         return $this;
     }
 
     /**
-     * @param Container $container
+     * @param PackableInterface $box
      * @return $this
      */
-    public function addContainer(Container $container)
+    public function addBox(PackableInterface $box)
     {
-        $this->containers[] = $container;
+        $this->containers[] = $this->getBoxContainer($box);
         return $this;
     }
 
     /**
-     * @param $items
+     * @param PackableInterface $box
+     * @return Container
+     */
+    protected function getBoxContainer(PackableInterface $box)
+    {
+        $container = new Container( $box->getWidth(), $box->getLength(), $box->getHeight(), $box->getDescription());
+        $container->setId(uniqid());
+        $container->setObjectReference($box);
+        return $container;
+    }
+
+    /**
+     * @param PackableInterface|PackableInterface[] $items
      * @return $this
      */
     public function setItems($items)
@@ -71,13 +83,27 @@ class Packer
     }
 
     /**
-     * @param SolidInterface $solid
+     * @param PackableInterface $item
      * @return $this
      */
-    public function addItem(SolidInterface $solid)
+    public function addItem(PackableInterface $item)
     {
-        $this->items[] = $solid;
+        $this->solids[] = $this->getItemSolid($item);
         return $this;
+    }
+
+    /**
+     * Get a Solid representation of a packable item
+     *
+     * @param PackableInterface $item
+     * @return PackableInterface|Solid
+     */
+    protected function getItemSolid(PackableInterface $item)
+    {
+        $solid = new Solid( $item->getWidth(), $item->getLength(), $item->getHeight(), $item->getDescription());
+        $solid->setId(uniqid());
+        $solid->setObjectReference($item);
+        return $solid;
     }
 
     /**
@@ -86,7 +112,7 @@ class Packer
      */
     public function pack()
     {
-        if (!$this->items) {
+        if (!$this->solids) {
             throw new InvalidPackingScenarioError('There are no items to pack. Use setItems or addItem to add items.');
         }
 
@@ -94,14 +120,14 @@ class Packer
             throw new InvalidPackingScenarioError('There are no containers. Use setContainers or addContainer to add containers');
         }
 
-        $this->sortObjects($this->items);
+        $this->sortObjects($this->solids);
         $this->sortObjects($this->containers);
 
-        $notPacked = $this->items;
+        $notPacked = $this->solids;
 
-        foreach ($notPacked as $key => $item) {
+        foreach ($notPacked as $key => $solid) {
             foreach ($this->containers as $container) {
-                if ($container->addSolid($item)) {
+                if ($container->addSolid($solid)) {
                     unset($notPacked[$key]);
                     break;
                 }

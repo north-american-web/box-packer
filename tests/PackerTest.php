@@ -13,11 +13,11 @@ class PackerTest extends TestCase
     /**
      * @expectedException \TypeError
      */
-    public function testSetInvalidContainer()
+    public function testSetInvalidBoxes()
     {
-        $container = new Solid(1, 1, 1, 'Dummy');
+        $container = 'dummy';
         $packer = new Packer();
-        $packer->setContainers([$container]);
+        $packer->setBoxes([$container]);
     }
 
     /**
@@ -31,7 +31,6 @@ class PackerTest extends TestCase
 
     public function testPackerMinimizesContainers()
     {
-
         $items = [
             new Solid(1, 1, 1 ),
             new Solid(1, 1, 1 ),
@@ -47,7 +46,7 @@ class PackerTest extends TestCase
         $packer = new Packer($containers, $items);
         $result = $packer->pack();
 
-        $this->assertCount(2, $result->getPackedContainers());
+        $this->assertCount(2, $result->getPackedBoxes());
     }
 
     /**
@@ -56,7 +55,7 @@ class PackerTest extends TestCase
     public function testPackWithoutItems()
     {
         $packer = new Packer([new Container(4, 4, 4)], []);
-        $result = $packer->pack();
+        $packer->pack();
     }
 
     /**
@@ -65,7 +64,7 @@ class PackerTest extends TestCase
     public function testPackWithoutContainers()
     {
         $packer = new Packer([], [new Solid(1,1,1)]);
-        $result = $packer->pack();
+        $packer->pack();
     }
 
 }

@@ -3,10 +3,11 @@ namespace NAWebCo\BoxPacker;
 
 use \JsonSerializable;
 
-class Solid implements SolidInterface, JsonSerializable
+class Solid implements PackableInterface, SolidInterface, JsonSerializable
 {
     use ExtensionTrait;
     use DescribableTrait;
+    use ObjectReferenceTrait;
 
     /**
      * @param float $width

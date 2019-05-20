@@ -48,21 +48,8 @@ class PackingResult
 
         $this->notPackedItems = $notPackedItems;
         $this->containers = $packedContainers;
-    }
 
-    /**
-     * @return array
-     */
-    public function getContainers()
-    {
-        $containers = [];
-        foreach($this->containers as $container){
-            if( $container->getContentsCount() > 0 ){
-                $containers[] = $container;
-            }
-        }
-
-        return $containers;
+        $this->sortOutPackedAndEmptyContainers();
     }
 
     /**
@@ -79,25 +66,35 @@ class PackingResult
     }
 
     /**
+     * @param Solid{}|Container[] $things
      * @return array
      */
-    public function getPackedContainers()
+    protected function getObjectReferencesFromSolidsOrContainers($things)
     {
-        if( empty($this->packedContainers) && empty($this->emptyContainers) ){
-            $this->sortOutPackedAndEmptyContainers();
+        if( !$things ){
+            return [];
         }
-        return $this->packedContainers;
+
+        return array_map(function($container){
+            /** @var Container $container */
+            return $container->getObjectReference();
+        }, $things);
     }
 
     /**
      * @return array
      */
-    public function getEmptyContainers()
+    public function getPackedBoxes()
     {
-        if( empty($this->packedContainers) && empty($this->emptyContainers) ){
-            $this->sortOutPackedAndEmptyContainers();
-        }
-        return $this->emptyContainers;
+        return $this->getObjectReferencesFromSolidsOrContainers($this->packedContainers);
+    }
+
+    /**
+     * @return array
+     */
+    public function getEmptyBoxes()
+    {
+        return $this->getObjectReferencesFromSolidsOrContainers($this->emptyContainers);
     }
 
     /**
@@ -105,7 +102,7 @@ class PackingResult
      */
     public function getNotPackedItems()
     {
-        return $this->notPackedItems;
+        return $this->getObjectReferencesFromSolidsOrContainers($this->notPackedItems);
     }
 
     /**

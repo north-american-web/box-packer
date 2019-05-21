@@ -1,6 +1,7 @@
 <?php
 namespace NAWebCo\BoxPackerTest;
 
+use NAWebCo\BoxPacker\GenericPackable;
 use PHPUnit\Framework\TestCase;
 
 use NAWebCo\BoxPacker\Solid;
@@ -65,6 +66,23 @@ class PackerTest extends TestCase
     {
         $packer = new Packer([], [new Solid(1,1,1)]);
         $packer->pack();
+    }
+
+    public function testPackEverythingPossible()
+    {
+        $packer = new Packer();
+        $packer->addBox(new GenericPackable(2, 3, 4));
+
+        $packer->addItem(new GenericPackable(1,1,1));
+        $packer->addItem(new GenericPackable(2,2,2));
+        $packer->addItem(new GenericPackable(2,2,2));
+
+        // Won't fit
+        $packer->addItem(new GenericPackable(2,2,2));
+
+        $result = $packer->pack();
+
+        $this->assertCount(1, $result->getNotPackedItems());
     }
 
 }

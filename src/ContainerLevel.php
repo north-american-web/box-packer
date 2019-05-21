@@ -58,6 +58,28 @@ class ContainerLevel
     }
 
     /**
+     * Repack current contents.
+     *
+     * @return $this
+     */
+    protected function repack()
+    {
+        $items = $this->getContents();
+
+        // Reset
+        $this->containers = [];
+        $this->contentsMaxHeight = 0.0;
+        $this->spaces = [new Solid($this->width, $this->length)];
+        $this->packedSolids = [];
+
+
+        foreach( $items as $solid){
+            $this->addSolid($solid);
+        }
+        return $this;
+    }
+
+    /**
      * Remove an already-packed solid (if it exists.
      *
      * @param mixed $id
@@ -67,14 +89,17 @@ class ContainerLevel
     {
         if( array_key_exists($id, $this->packedSolids)){
             unset($this->packedSolids[$id]);
+            $this->repack();
             return true;
         }
 
         foreach( $this->containers as $container ){
             if( $container->removeSolid($id) ){
+                $this->repack();
                 return true;
             }
         }
+
         return false;
     }
 

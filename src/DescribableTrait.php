@@ -31,7 +31,7 @@ trait DescribableTrait
      * @param $description
      * @return $this|PackableInterface
      */
-    public function setDescription($description): PackableInterface
+    public function setDescription(?string $description): PackableInterface
     {
         $this->description = $description;
         return $this;

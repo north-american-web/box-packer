@@ -8,26 +8,8 @@ use JsonSerializable;
 
 class GenericPackable implements PackableInterface, JsonSerializable
 {
-
-    /**
-     * @var null
-     */
-    protected $description;
-
-    /**
-     * @var float
-     */
-    protected $height;
-
-    /**
-     * @var float
-     */
-    protected $length;
-
-    /**
-     * @var float
-     */
-    protected $width;
+    use DescribableTrait;
+    use ExtensionTrait;
 
     /**
      * GenericItem constructor.
@@ -42,38 +24,6 @@ class GenericPackable implements PackableInterface, JsonSerializable
             ->setLength($length)
             ->setHeight($height)
             ->setDescription($description);
-    }
-
-    /**
-     * @return null
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * @return float
-     */
-    public function getHeight(): float
-    {
-        return $this->height;
-    }
-
-    /**
-     * @return float
-     */
-    public function getLength(): float
-    {
-        return $this->length;
-    }
-
-    /**
-     * @return float
-     */
-    public function getWidth(): float
-    {
-        return $this->width;
     }
 
     /**
@@ -99,45 +49,5 @@ class GenericPackable implements PackableInterface, JsonSerializable
     public function jsonSerialize()
     {
         return $this->toArray();
-    }
-
-    /**
-     * @param $description
-     * @return $this|PackableInterface
-     */
-    public function setDescription(string $description): PackableInterface
-    {
-        $this->description = $description;
-        return $this;
-    }
-
-    /**
-     * @param $height
-     * @return PackableInterface
-     */
-    public function setHeight($height): PackableInterface
-    {
-        $this->height = (float) $height;
-        return $this;
-    }
-
-    /**
-     * @param $length
-     * @return PackableInterface
-     */
-    public function setLength($length): PackableInterface
-    {
-        $this->length = (float) $length;
-        return $this;
-    }
-
-    /**
-     * @param $width
-     * @return PackableInterface
-     */
-    public function setWidth($width): PackableInterface
-    {
-        $this->width = $width;
-        return $this;
     }
 }

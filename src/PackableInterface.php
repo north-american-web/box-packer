@@ -9,7 +9,7 @@ interface PackableInterface
 
     public function getDescription();
 
-    public function setDescription(string $description): PackableInterface;
+    public function setDescription(?string $description): PackableInterface;
 
     public function getHeight();
 

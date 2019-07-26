@@ -36,7 +36,7 @@ class GenericPackable implements PackableInterface, JsonSerializable
      * @param $height
      * @param null $description
      */
-    public function __construct($width, $length, $height, $description = null)
+    public function __construct($width = null, $length = null, $height = null, $description = null)
     {
         $this->setWidth($width)
             ->setLength($length)

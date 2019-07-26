@@ -47,9 +47,9 @@ class Container implements PackableInterface, SolidInterface, JsonSerializable
 
     /**
      * @param $height
-     * @return $this
+     * @return $this|PackableInterface
      */
-    public function setHeight($height)
+    public function setHeight($height): PackableInterface
     {
         if ($height < 0) {
             throw new \InvalidArgumentException(sprintf('Height must be greater than or equal to zero. %f given.', $height));

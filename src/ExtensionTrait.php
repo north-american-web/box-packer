@@ -37,10 +37,10 @@ trait ExtensionTrait
     /**
      * @param $width
      * @param $length
-     * @param int $height
+     * @param float $height
      * @return $this
      */
-    protected function setDimensions($width, $length, $height = 0.0)
+    public function setDimensions($width, $length, $height = 0.0)
     {
         $this->setWidth($width);
         $this->setLength($length);
@@ -50,9 +50,9 @@ trait ExtensionTrait
 
     /**
      * @param float $height
-     * @return ExtensionTrait
+     * @return PackableInterface
      */
-    protected function setHeight($height)
+    public function setHeight($height): PackableInterface
     {
         $this->height = $height;
         return $this;
@@ -60,9 +60,9 @@ trait ExtensionTrait
 
     /**
      * @param float $length
-     * @return ExtensionTrait
+     * @return PackableInterface
      */
-    protected function setLength($length)
+    public function setLength($length): PackableInterface
     {
         $this->length = $length;
         return $this;
@@ -70,9 +70,9 @@ trait ExtensionTrait
 
     /**
      * @param float $width
-     * @return ExtensionTrait
+     * @return PackableInterface
      */
-    protected function setWidth($width)
+    public function setWidth($width): PackableInterface
     {
         $this->width = $width;
         return $this;

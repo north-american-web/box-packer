@@ -38,10 +38,10 @@ class GenericPackable implements PackableInterface, JsonSerializable
      */
     public function __construct($width, $length, $height, $description = null)
     {
-        $this->width = (float) $width;
-        $this->length = (float) $length;
-        $this->height = (float) $height;
-        $this->description = $description;
+        $this->setWidth($width)
+            ->setLength($length)
+            ->setHeight($height)
+            ->setDescription($description);
     }
 
     /**
@@ -99,5 +99,45 @@ class GenericPackable implements PackableInterface, JsonSerializable
     public function jsonSerialize()
     {
         return $this->toArray();
+    }
+
+    /**
+     * @param $description
+     * @return $this|PackableInterface
+     */
+    public function setDescription(string $description): PackableInterface
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    /**
+     * @param $height
+     * @return PackableInterface
+     */
+    public function setHeight($height): PackableInterface
+    {
+        $this->height = (float) $height;
+        return $this;
+    }
+
+    /**
+     * @param $length
+     * @return PackableInterface
+     */
+    public function setLength($length): PackableInterface
+    {
+        $this->length = (float) $length;
+        return $this;
+    }
+
+    /**
+     * @param $width
+     * @return PackableInterface
+     */
+    public function setWidth($width): PackableInterface
+    {
+        $this->width = $width;
+        return $this;
     }
 }

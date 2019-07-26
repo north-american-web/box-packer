@@ -29,9 +29,9 @@ trait DescribableTrait
 
     /**
      * @param $description
-     * @return $this
+     * @return $this|PackableInterface
      */
-    public function setDescription($description)
+    public function setDescription($description): PackableInterface
     {
         $this->description = $description;
         return $this;
